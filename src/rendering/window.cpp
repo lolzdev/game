@@ -1,11 +1,18 @@
 #include <rendering/window.hpp>
 
+static void framebufferResizeCallback(GLFWwindow* raw, int width, int height) {
+	auto window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(raw));
+    window->framebufferResized = true;
+}
+
 Window::Window(std::string title, uint32_t width, uint32_t height) {
 	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	raw = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+	glfwSetWindowUserPointer(raw, this);
+	glfwSetFramebufferSizeCallback(raw, framebufferResizeCallback);
+	framebufferResized = false;
 }
 
 Window::~Window() {

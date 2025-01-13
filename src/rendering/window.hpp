@@ -8,6 +8,8 @@ public:
 	Window(std::string title, uint32_t width, uint32_t height);
 	~Window();
 
+	bool framebufferResized;
+
 	vk::Extent2D framebufferSize();
 	bool shouldClose();
 	void tick();

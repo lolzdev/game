@@ -1,6 +1,26 @@
 #include <assets/file.hpp>
+namespace fs = std::filesystem;
 
-static std::vector<char> readFile(Identifier id) {
+fs::path getFilePath(Identifier id, AssetType ty) {
+	std::string assetDirectory;
+	std::string assetExtension;
+
+	switch (ty) {
+		case AssetType::Shader:
+			assetDirectory = "shaders";
+			assetExtension = ".glsl";
+			break;
+		case AssetType::Texture:
+			assetDirectory = "textures";
+			assetExtension = ".png";
+			break;
+	}
+
+	return fs::current_path() / ".." / "mods" / id.space / "assets" / assetDirectory / (id.name + assetExtension);
+}
+
+std::vector<char> readFile(Identifier id, AssetType ty) {
+	auto filename = getFilePath(id, ty);
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
     if (!file.is_open()) {
